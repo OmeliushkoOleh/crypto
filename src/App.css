@@ -22,3 +22,26 @@ Body.light {
     display: flex;
     flex-direction: column;
 }
+
+.background_color {
+    background-color: #00ff00;
+    background-color: #00b67a;
+    background-color: #00d378;
+    background-color: #00c46b;
+    background-color: #02b2e4;
+    background-color: #16c784;
+    background-color: #6188ff;
+    background-color: #ddddde;
+    background-color: #727272;
+    background-color: #646b80;
+    background-color: #646b80;
+    background-color: #212121;
+    background-color: #383838;
+    background-color: #1c1d24;
+    background-color: #1c1e26;
+    background-color: #2b2b2b;
+    background-color: #61dafb;
+    background-color: #202020;
+    background-color: #121212;
+    background-color: #787878;
+}

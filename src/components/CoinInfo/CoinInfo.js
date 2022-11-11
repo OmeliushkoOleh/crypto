@@ -99,15 +99,11 @@ if(chartTypeNow == "linear"){
   drawChart(days1,"linear")
   setchartTypeNow("linear")
 }
-console.log(chartTypeNow);
-console.log(chartInfo.lables);
-console.log(chartInfo.minlables);
-console.log(chartInfo.prices);
+
 
   
 }
 const drawChart = (days,type)=>{
-  console.log();
   if(MyChart ){
     MyChart.destroy();
   }
@@ -237,6 +233,7 @@ const drawChart = (days,type)=>{
 
     axios.get(`https://api.coingecko.com/api/v3/coins/${coinID}`)
     .then((response) => {
+      console.log(response);
       setcurrentCoinInfo(response.data)
       document.getElementById("description").innerHTML =  response.data.description.en
     }, (error) => {
@@ -311,10 +308,11 @@ const color = (number)=>{
 
         <div>
           <div className="sec_info_item">
-            <span className="">price change 24h:&nbsp;{color(currentCoinInfo.market_data?.price_change_percentage_24h)}</span>
-            <span className="">price change 7d:&nbsp;{color(currentCoinInfo.market_data?.price_change_percentage_7d)}</span>
-            <span className="">price change 30d:&nbsp;{color(currentCoinInfo.market_data?.price_change_percentage_30d)}</span>
-            <span className="">price change 1y:&nbsp;{color(currentCoinInfo.market_data?.price_change_percentage_1y)}</span>
+            <span>Price Change</span>
+            <span className="">24h:&nbsp;{color(currentCoinInfo.market_data?.price_change_percentage_24h)}</span>
+            <span className="">7d:&nbsp;{color(currentCoinInfo.market_data?.price_change_percentage_7d)}</span>
+            <span className="">30d:&nbsp;{color(currentCoinInfo.market_data?.price_change_percentage_30d)}</span>
+            <span className="">1y:&nbsp;{color(currentCoinInfo.market_data?.price_change_percentage_1y)}</span>
           </div>
 
           <div className="sec_info_item">

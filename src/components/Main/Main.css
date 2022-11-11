@@ -17,18 +17,21 @@
     width: 900px;
 }
 
-tr:nth-child(2n) {
-    background-color: aliceblue;
-}
 
-tr:hover {
+/* tr:nth-child(2n) {
+    background-color: aliceblue;
+} */
+
+body.light tr:hover {
     color: #6188ff;
     background-color: azure;
+    outline: 2px solid #6188ff;
 }
 
 body.dark tr:hover {
     color: #00b67a;
-    background-color: rgb(44, 44, 44);
+    background-color: azure;
+    outline: 2px solid #00b67a;
 }
 
 td {
@@ -40,13 +43,13 @@ td {
 td.name {
     cursor: pointer;
     text-align: left;
-    border-radius: 5px;
 }
 
-td.name:hover {
+
+/* td.name:hover {
     outline: 2px solid rgb(68, 124, 255);
     background-color: rgb(218, 252, 252);
-}
+} */
 
 td.name:hover img {
     filter: drop-shadow(0 0 5px #0d6efd);

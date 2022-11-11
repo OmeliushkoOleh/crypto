@@ -33,6 +33,15 @@ const Main = () => {
 
   let context = React.useContext(MyContext)
 
+  const color = (number)=>{
+    if(number > 0){
+      return <span style={{color:"green"}}> &#129093; {number.toFixed(2)}%</span>
+    } else if(number < 0){
+      return <span style={{color:"red"}}> &#129095; {Math.abs(number.toFixed(2))}%</span>
+    } else{
+      return <span>{number}%</span>
+    }
+  }
 
 
   React.useEffect(()=>{
@@ -85,6 +94,7 @@ const Main = () => {
 
   const findById = (id)=>{
     localStorage.setItem("currentCoin",id)
+    window.scrollTo(0, 0)
     navigate(`/coins/${id}`);
   }
 
@@ -122,7 +132,7 @@ const Main = () => {
             <td data-i18n-key="Price" onClick={()=>{sortBy(arrOfCrypt,"current_price")}}><span className="header_td">Price(USD)</span></td>
             <td data-i18n-key="MarketCap" onClick={()=>{sortBy(arrOfCrypt,"market_cap")}}><span className="header_td">Market Cap</span></td>
             <td data-i18n-key="Volume" onClick={()=>{sortBy(arrOfCrypt,"total_volume")}}><span className="header_td">Volume(24hr)</span></td>
-            <td data-i18n-key="Volume" onClick={()=>{sortBy(arrOfCrypt,"total_volume")}}><span className="header_td">Volume(24hr)</span></td>
+            <td data-i18n-key="Volume" onClick={()=>{sortBy(arrOfCrypt,"price_change_percentage_24h")}}><span className="header_td">Price Change(24hr)</span></td>
           </tr>
         </thead>
         
@@ -137,6 +147,7 @@ const Main = () => {
               <td >{fix(e.current_price)} $</td>
               <td >{Intl.NumberFormat('ru').format(e.market_cap)} $</td>
               <td >{Intl.NumberFormat('ru').format(e.total_volume)} $</td>
+              <td >{color(e.price_change_percentage_24h)}</td>
             </tr>
             )
           }

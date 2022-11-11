@@ -47,6 +47,11 @@ const splitNumber = (number)=>{
 
 
 const TopBar = () => {
+
+
+
+
+  const [theme, setTheme] = React.useState("day")
   const navigate = useNavigate();
   const [global, setglobal] = React.useState([])
 
@@ -107,8 +112,27 @@ const loadChoosenCoinPage = (event)=>{
     });
 
 }
+const changeTheme = ()=>{
+    let set 
+    let remove
+    let add 
+  if(theme == "day"){
+     set = "night"
+     remove = "dark"
+     add = "light"
+  } else{
+     set = "day"
+     remove = "light"
+     add = "dark"
+  }
+  setTheme(set)
+  document.body.classList.remove(remove)
+  document.body.classList.add(add)
+}
 
-console.log();
+
+
+
   return <div className="top_bar">
 
     <LogRegModal></LogRegModal>
@@ -125,14 +149,16 @@ console.log();
       </div>
     </div> 
 
-    <div className="top_bar_item">
+    <div className="top_bar_item settings" >
       
       <div className="settings">
         <div className="settings_language">
-          
+        settings_language
         </div>
-        <div className="settings_theme">
-          
+        <div className="settings_theme" onClick={()=>{changeTheme()}}>
+        {theme == "day"?
+        <ion-icon size="large" name="sunny-outline"></ion-icon>:
+        <ion-icon size="large" name="moon-outline"></ion-icon>}
         </div>
       </div>
     </div> 
