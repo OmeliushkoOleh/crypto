@@ -4,6 +4,7 @@ import './App.css';
 import { Routes,Route } from 'react-router-dom';
 import Main from './components/Main';
 import CoinInfo from "./components/CoinInfo/CoinInfo";
+import LeftBar from "./components/LeftBar";
 
 
 export const MyContext = React.createContext([]);
@@ -20,7 +21,7 @@ function App() {
     <div className="App">
       <MyContext.Provider value={{}}>
         <TopBar></TopBar>
-        
+        {/* <LeftBar></LeftBar> */}
         <Routes>
 
           <Route path="/"   element={<Main></Main>} />
