@@ -101,6 +101,7 @@ const Main = () => {
 
 
   const changePage = (value)=>{
+    window.scrollTo(0, 0)
     setPage(value);
     console.log(value)
     localStorage.setItem("currentPage",value)
@@ -144,9 +145,9 @@ const Main = () => {
             <tr  key={key}>
               <td>{e.market_cap_rank} </td>
               <td className="name" onClick={()=>{findById(e.id)}} > <img style={{width:"25px",height:"25px"}} src={e.image}></img> &nbsp; {e.name} <span style={{color:"grey",fontWeight:"500"}}>({e.symbol.toUpperCase()})</span></td>
-              <td >{fix(e.current_price)} $</td>
-              <td >{Intl.NumberFormat('ru').format(e.market_cap)} $</td>
-              <td >{Intl.NumberFormat('ru').format(e.total_volume)} $</td>
+              <td >{fix(e.current_price)}$</td>
+              <td >{Intl.NumberFormat('ru').format(e.market_cap)}$</td>
+              <td >{Intl.NumberFormat('ru').format(e.total_volume)}$</td>
               <td >{color(e.price_change_percentage_24h)}</td>
             </tr>
             )

@@ -8,14 +8,14 @@
     box-sizing: border-box;
 }
 
-Body.dark {
-    background-color: #2b2b2b;
-    color: whitesmoke;
+body.light {
+    background-color: white;
+    color: black;
 }
 
-Body.light {
-    background-color: whitesmoke;
-    color: black;
+body.dark {
+    background-color: #1c1d24;
+    color: #a4abc2fa;
 }
 
 .App {

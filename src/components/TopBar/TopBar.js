@@ -48,14 +48,38 @@ const splitNumber = (number)=>{
 
 const TopBar = () => {
 
-
-
-
-  const [theme, setTheme] = React.useState("day")
   const navigate = useNavigate();
   const [global, setglobal] = React.useState([])
 
+
+  
+  const changeTheme = ()=>{
+    let set 
+    let remove
+    let add 
+  if(localStorage.getItem("theme") == "light"){
+     set = "dark"
+     remove = "light"
+     add = "dark"
+  } else{
+     set = "light"
+     remove = "dark"
+     add = "light"
+  }
+  localStorage.setItem("theme",set)
+  document.body.classList.remove(remove)
+  document.body.classList.add(add)
+}
+
   React.useEffect(()=>{
+
+    if(localStorage.getItem("theme") == null ){
+      localStorage.setItem("theme","light")
+      document.body.classList.add("light")
+    } else{
+      document.body.classList.add(localStorage.getItem("theme"))
+    }
+
     axios.get(`https://api.coingecko.com/api/v3/global`)
   .then((response) => {
     setglobal(response.data)
@@ -112,23 +136,7 @@ const loadChoosenCoinPage = (event)=>{
     });
 
 }
-const changeTheme = ()=>{
-    let set 
-    let remove
-    let add 
-  if(theme == "day"){
-     set = "night"
-     remove = "dark"
-     add = "light"
-  } else{
-     set = "day"
-     remove = "light"
-     add = "dark"
-  }
-  setTheme(set)
-  document.body.classList.remove(remove)
-  document.body.classList.add(add)
-}
+
 
 
 
@@ -156,9 +164,9 @@ const changeTheme = ()=>{
         settings_language
         </div>
         <div className="settings_theme" onClick={()=>{changeTheme()}}>
-        {theme == "day"?
-        <ion-icon size="large" name="sunny-outline"></ion-icon>:
-        <ion-icon size="large" name="moon-outline"></ion-icon>}
+        {localStorage.getItem("theme")  == "light" || localStorage.getItem("theme")  == null ?
+        <ion-icon size="large" name="moon-outline" ></ion-icon>:
+        <ion-icon size="large" name="sunny-outline"></ion-icon>}
         </div>
       </div>
     </div> 

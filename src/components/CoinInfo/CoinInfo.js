@@ -276,7 +276,7 @@ const color = (number)=>{
       <div>
         <span className="full_rank"> Market Cap Rank #&nbsp;{currentCoinInfo?.market_cap_rank }</span>
         <span className="full_name"> <img src={currentCoinInfo?.image?.large}></img> &nbsp;{currentCoinInfo.name} ({currentCoinInfo.symbol?.toUpperCase()})</span>
-        <span className="full_price">{fix(currentCoinInfo.market_data?.current_price?.usd,2)} &nbsp;$</span>
+        <span className="full_price">{fix(currentCoinInfo.market_data?.current_price?.usd,2)}$</span>
 
 
         <span className="progress_container ">

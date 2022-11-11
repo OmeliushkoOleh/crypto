@@ -5,6 +5,7 @@
     height: var(--top-bar-height);
     align-items: flex-start;
     padding-top: 25px;
+    color: black;
 }
 
 .global {
@@ -55,12 +56,11 @@
     align-items: center;
     justify-content: center;
     color: black;
-    filter: drop-shadow(0 0 2px yellow);
     border-radius: 5px;
 }
 
 .settings_theme:hover {
-    outline: 2px solid yellow;
+    transform: scale(1.1);
 }
 
 .home {
@@ -102,15 +102,33 @@
     padding: 5px;
     border: none;
     border-radius: 5px;
-    outline: 2px solid rgb(68, 124, 255);
     outline-offset: -2px;
 }
 
-.search_input:focus {
+body.dark .search_input,
+body.dark .search_button {
+    outline: 2px solid #00b67a;
+}
+
+body.dark .search_input:focus {
+    outline: 2px solid #00ffaa;
+}
+
+body.dark .search_input:focus+.search_button {
+    outline: 2px solid #00ffaa;
+    filter: drop-shadow(0 0 8px rgb(0, 255, 81)) drop-shadow(0 0 3px rgb(0, 255, 72));
+}
+
+body.light .search_input,
+body.light .search_button {
+    outline: 2px solid rgb(68, 124, 255);
+}
+
+body.light .search_input:focus {
     outline: 2px solid blue;
 }
 
-.search_input:focus+.search_button {
+body.light .search_input:focus+.search_button {
     outline: 2px solid blue;
     filter: drop-shadow(0 0 8px blue) drop-shadow(0 0 3px blue);
 }
