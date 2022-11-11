@@ -163,6 +163,10 @@ const drawChart = (days,type)=>{
       
       plugins: {
         subtitle: {
+          color:"black",
+          font:{
+            size:15,
+          },
           display: true,
           text: `Press ${modifierKey} + mouse wheel to zoom / ${modifierKey} + mouse click and drug to move chart`
       },
@@ -171,8 +175,12 @@ const drawChart = (days,type)=>{
         },
         
         title: {
+          font:{
+            size:20
+          },
+          color:"black",
           display: true,
-          text: `Chart for ${coinID.toUpperCase()} for ${days} days`
+          text: `${coinID.toUpperCase()} Chart for ${days} days`
         },
 
         zoom: {
@@ -338,7 +346,7 @@ const color = (number)=>{
       <Button onClick={()=>{chartRequest("max")}}>MAX</Button>
       
     </ButtonGroup>
-    <button onClick={()=>{changeChartToLog()}}>Log</button>
+    <button className="chart_button" onClick={()=>{changeChartToLog()}}>Log</button>
     <canvas id="chart"   ></canvas>
 
     </div>
