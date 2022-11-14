@@ -5,6 +5,8 @@
     justify-content: flex-start;
     height: calc(100vh - var(--top-bar-height));
     flex-direction: column;
+    --table-divider-color: #eff2f5;
+    min-width: 1200px;
 }
 
 .main button:hover {
@@ -89,23 +91,16 @@ td.name:hover img {
 
 body.light .navigation:hover {
     transform: scale(1.2);
-    filter: drop-shadow(0 0 8px #0d6efd);
+    filter: drop-shadow(0 0 5px #0d6efd)drop-shadow(0 0 10px #0d6efd);
 }
 
 body.dark .navigation:hover {
     transform: scale(1.2);
-    filter: drop-shadow(0 0 8px #00ff00);
+    filter: drop-shadow(0 0 5px #00ff00)drop-shadow(0 0 10px #00ff00);
 }
 
 .navigation:active {
     transform: scale(0.95);
-}
-
-.navigation.bot {
-    position: fixed;
-    bottom: 10px;
-    left: 10px;
-    padding-top: 10px;
 }
 
 .navigation.top {
@@ -113,4 +108,11 @@ body.dark .navigation:hover {
     top: 90px;
     left: 10px;
     padding-bottom: 10px;
+}
+
+.navigation.bot {
+    position: fixed;
+    bottom: 90px;
+    left: 10px;
+    padding-top: 10px;
 }

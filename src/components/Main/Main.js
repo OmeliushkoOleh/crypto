@@ -129,11 +129,11 @@ const Main = () => {
         <thead>
           <tr>
             <td onClick={()=>{sortBy(arrOfCrypt,"market_cap_rank")}}><span className="header_td">#</span></td>
-            <td className="name" data-i18n-key="name" onClick={()=>{sortBy(arrOfCrypt,"name")}}><span className="header_td">Name</span></td>
-            <td data-i18n-key="Price" onClick={()=>{sortBy(arrOfCrypt,"current_price")}}><span className="header_td">Price(USD)</span></td>
-            <td data-i18n-key="MarketCap" onClick={()=>{sortBy(arrOfCrypt,"market_cap")}}><span className="header_td">Market Cap</span></td>
-            <td data-i18n-key="Volume" onClick={()=>{sortBy(arrOfCrypt,"total_volume")}}><span className="header_td">Volume(24hr)</span></td>
-            <td data-i18n-key="Volume" onClick={()=>{sortBy(arrOfCrypt,"price_change_percentage_24h")}}><span className="header_td">Price Change(24hr)</span></td>
+            <td className="name" data-i18n-key="name" onClick={()=>{sortBy(arrOfCrypt,"name")}}><span className="header_td"></span></td>
+            <td data-i18n-key="Price" onClick={()=>{sortBy(arrOfCrypt,"current_price")}}><span className="header_td"></span></td>
+            <td data-i18n-key="MarketCap" onClick={()=>{sortBy(arrOfCrypt,"market_cap")}}><span className="header_td"></span></td>
+            <td data-i18n-key="Volume" onClick={()=>{sortBy(arrOfCrypt,"total_volume")}}><span className="header_td"></span></td>
+            <td data-i18n-key="price_change" onClick={()=>{sortBy(arrOfCrypt,"price_change_percentage_24h")}}><span className="header_td"></span></td>
           </tr>
         </thead>
         

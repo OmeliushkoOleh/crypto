@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import LogRegModal from "../LogRegModal/LogRegModal";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import  translations from "../../services/locale.ts"
 
 
 const splitNumber = (number)=>{
@@ -34,7 +35,7 @@ const splitNumber = (number)=>{
     }
   })
   if(splited.length > 1){
-    if(arr[arr.length - 1] == ","){
+    if(arr[arr.length - 1] === ","){
       arr.pop()
     }
     arr.push(".")
@@ -51,13 +52,22 @@ const TopBar = () => {
   const navigate = useNavigate();
   const [global, setglobal] = React.useState([])
 
+  let jsonParsedLang = JSON.parse(localStorage.getItem("Language"))
 
+
+  React.useEffect(()=>{
+    if(jsonParsedLang === null || jsonParsedLang === "en" ) {
+      changeLang("en")
+    } else{
+      changeLang(jsonParsedLang)
+    }
+    },[jsonParsedLang])
   
   const changeTheme = ()=>{
     let set 
     let remove
     let add 
-  if(localStorage.getItem("theme") == "light"){
+  if(localStorage.getItem("theme") === "light"){
      set = "dark"
      remove = "light"
      add = "dark"
@@ -81,13 +91,13 @@ const TopBar = () => {
     }
 
     axios.get(`https://api.coingecko.com/api/v3/global`)
-  .then((response) => {
-    setglobal(response.data)
-  }, (error) => {
-    console.log(error);
-  });
+    .then((response) => {
+      setglobal(response.data)
+    }, (error) => {
+      console.log(error);
+    });
 
-},[])
+  },[])
 
   const findById = (id)=>{
     localStorage.setItem("currentCoin",id)
@@ -99,7 +109,6 @@ const TopBar = () => {
 
   React.useEffect(()=>{
     document.body.addEventListener('click', ()=>{setlistOfFindedCoins([])})
-    
   },[])
 
 const findByName = ()=>{
@@ -125,7 +134,6 @@ const findByName = ()=>{
     });
 }
 const loadChoosenCoinPage = (event)=>{
-  
   search_input_ref.current.value = ""
   setlistOfFindedCoins([])
   axios.get(`https://api.coingecko.com/api/v3/coins/${event.target.id}`)
@@ -134,11 +142,31 @@ const loadChoosenCoinPage = (event)=>{
     }, (error) => {
       console.log(error);
     });
-
 }
 
+let locale = "en";
 
+const showLanguagesSheet = ()=>{
+  console.log("showLanguagesSheet");
+  document.getElementById("languagesSheet")?.classList.toggle("hidden")
 
+}
+const changeLang = (lang)=>{
+  locale = lang 
+  document.querySelectorAll("[data-i18n-key]").forEach(translateElement);
+  document.querySelectorAll("[data-i18-val]").forEach(translateElement);
+  let languageStringifyed = JSON.stringify(lang)
+  localStorage.setItem("Language", languageStringifyed)
+}
+function translateElement(element) {
+  const key  = element.getAttribute("data-i18n-key");
+  const translation = translations[locale][key] ;
+  element.innerText = translation;
+
+  const val = element.getAttribute("data-i18-val");
+  const translation1 = translations[locale][val];
+  element.value = translation1;
+}
 
 
   return <div className="top_bar">
@@ -147,39 +175,43 @@ const loadChoosenCoinPage = (event)=>{
 
     <div className="top_bar_item">
       <Button variant="contained" >
-        <Link to="" data-i18n-key="home" className="home" >Home</Link>
+        <Link to="" data-i18n-key="home" className="home" ></Link>
       </Button>
       <div className="global">
-        <span>Coins:&nbsp;{new Intl.NumberFormat('ru-RU').format(global?.data?.active_cryptocurrencies)}</span>
-        <span>Exchanges:&nbsp;{global?.data?.markets}</span>
-        <span>Market Cap:&nbsp;{new Intl.NumberFormat('ru-RU').format(global?.data?.total_market_cap?.usd.toFixed(0)) }</span>
-        <span>24h Vol: &nbsp;{new Intl.NumberFormat('ru-RU').format(global?.data?.total_volume?.usd?.toFixed(0))}</span>
+      <span><span data-i18n-key="Coins_global"></span> <span >{new Intl.NumberFormat('ru').format(global?.data?.active_cryptocurrencies)}</span></span>
+      <span><span data-i18n-key="Exchanges_global"></span><span >{global?.data?.markets}</span></span>
+      <span><span data-i18n-key="Market_Cap_global"></span><span >{new Intl.NumberFormat('ru').format(global?.data?.total_market_cap?.usd.toFixed(0)) }</span></span>
+      <span><span data-i18n-key="24h_Vol_global"></span><span >{new Intl.NumberFormat('ru').format(global?.data?.total_volume?.usd?.toFixed(0))}</span></span>
       </div>
     </div> 
 
     <div className="top_bar_item settings" >
       
+      
+
       <div className="settings">
-        <div className="settings_language">
-        settings_language
-        </div>
+      <div className="settings_language" onClick={showLanguagesSheet}>
+          <span className="top_item_language_name" data-i18n-key="language"></span>
+          <div id="languagesSheet" className="languages hidden">
+            <span className="languageSheetItem" onClick={()=>{changeLang("en")}} data-i18n-key="english"></span>
+            <span className="languageSheetItem" onClick={()=>{changeLang("ua")}} data-i18n-key="ukraine"></span>
+          </div>  
+      </div> 
+
         <div className="settings_theme" onClick={()=>{changeTheme()}}>
-        {localStorage.getItem("theme")  == "light" || localStorage.getItem("theme")  == null ?
+        {localStorage.getItem("theme")  === "light" || localStorage.getItem("theme")  == null ?
         <ion-icon size="large" name="moon-outline" ></ion-icon>:
         <ion-icon size="large" name="sunny-outline"></ion-icon>}
         </div>
       </div>
+      
     </div> 
 
     <div className="top_bar_item search">
-    {/* <div class="input-group mb-3">
-      <input type="text" class="form-control" placeholder="Crypto" aria-label="Recipient's username" aria-describedby="button-addon2"></input>
-      <button class="btn btn-outline-secondary" type="button" id="button-addon2">Find</button>
-    </div> */}
-     <div style={{display:"flex"}}>
+      <div style={{display:"flex"}}>
       <input className="search_input" ref={search_input_ref}></input> 
-      <button className="search_button" style={{margin:"5px"}} onClick={()=>{findByName()}}>Find</button>
-     </div>
+      <button className="search_button" style={{margin:"5px"}} onClick={()=>{findByName()}} data-i18n-key="Find"></button>
+      </div>
      
 
      <div style={{display: "flex",flexDirection: "column",alignItems: "center"}}>
