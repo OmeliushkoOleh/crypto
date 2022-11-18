@@ -5,7 +5,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Pagination from '@mui/material/Pagination';
 
-
+import locales from "./I18n";
 
 export   function numberWithCommas(x) {
   var parts = x.toString().split(".");
@@ -25,6 +25,9 @@ export   const fix = (num)=>{
 }
 
 const Main = () => {
+
+  const provider = React.useContext(MyContext)
+  
   const navigate = useNavigate();
 
   const [arrOfCrypt, setarrOfCrypt] = useState([])
@@ -119,6 +122,7 @@ const Main = () => {
     });
   }
 
+  const t = provider.translate.bind(null,locales)
 
   return <div className="main">
       <div className="navigation top" onClick={()=>{window.scrollTo(0,0)}}>&#129153;</div>
@@ -128,12 +132,13 @@ const Main = () => {
 
         <thead>
           <tr>
-            <td onClick={()=>{sortBy(arrOfCrypt,"market_cap_rank")}}><span className="header_td">#</span></td>
-            <td className="name" data-i18n-key="name" onClick={()=>{sortBy(arrOfCrypt,"name")}}><span className="header_td"></span></td>
-            <td data-i18n-key="Price" onClick={()=>{sortBy(arrOfCrypt,"current_price")}}><span className="header_td"></span></td>
-            <td data-i18n-key="MarketCap" onClick={()=>{sortBy(arrOfCrypt,"market_cap")}}><span className="header_td"></span></td>
-            <td data-i18n-key="Volume" onClick={()=>{sortBy(arrOfCrypt,"total_volume")}}><span className="header_td"></span></td>
-            <td data-i18n-key="price_change" onClick={()=>{sortBy(arrOfCrypt,"price_change_percentage_24h")}}><span className="header_td"></span></td>
+            <td  onClick={()=>{sortBy(arrOfCrypt,"market_cap_rank")}}><span className="header_td">#
+            <span className="tooltiptext">Tooltip text</span></span></td>
+            <td  onClick={()=>{sortBy(arrOfCrypt,"name")}} className="name" > {t("name")}<span className="header_td"></span></td>
+            <td  onClick={()=>{sortBy(arrOfCrypt,"current_price")}}>{t("Price")}<span className="header_td"></span></td>
+            <td  onClick={()=>{sortBy(arrOfCrypt,"market_cap")}}>{t("MarketCap")}<span className="header_td"></span></td>
+            <td  onClick={()=>{sortBy(arrOfCrypt,"total_volume")}}>{t("Volume")}<span className="header_td"></span></td>
+            <td  onClick={()=>{sortBy(arrOfCrypt,"price_change_percentage_24h")}}>{t("price_change")}<span className="header_td"></span></td>
           </tr>
         </thead>
         
@@ -155,6 +160,7 @@ const Main = () => {
           )}
         </tbody>
       </table>
+      
 
       <div className="pagination_container">
 

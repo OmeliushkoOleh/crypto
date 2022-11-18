@@ -24,26 +24,19 @@ const LogRegModal = () => {
       document.getElementById("log_inputs").classList.remove("hidden");
       document.getElementById("reg_inputs").classList.add("hidden");
 
-      document.getElementById("logButton").setAttribute("style", `backgroundColor:"red"`);
-      document.getElementById("regButton").classList.remove("active");
     } else{
       document.getElementById("reg_inputs").classList.remove("hidden");
       document.getElementById("log_inputs").classList.add("hidden");
 
-      document.getElementById("regButton").classList.add("active");
-      document.getElementById("logButton").classList.remove("active");
     }
   }
 
   const sendLogInfo = ()=>{
-    console.log(input_log_email.current.value)
-    console.log(input_log_password.current.value)
+
   }
   
   const sendRegInfo = ()=>{
-    console.log(input_reg_email.current.value)
-    console.log(input_reg_password.current.value)
-    console.log(input_reg_re_password.current.value)
+
   }
 
 

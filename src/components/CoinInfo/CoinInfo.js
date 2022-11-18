@@ -6,11 +6,13 @@ import axios from "axios";
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import { useLocation } from 'react-router-dom';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 
 
-const fix = (num,fixNum)=>{
-  if(num > fixNum){
-    return  num.toFixed(2) 
+const fix = (num)=>{
+  if(num > 0.8){
+    return   Intl.NumberFormat('ru').format(num)
   } else{
     let sec = num + 1
     let str = sec.toString()
@@ -62,11 +64,8 @@ export const splitNumber = (number)=>{
 let MyChart = null;
 
 let chartInfo = {
-  lables: [],
-  minlables:[],
+  labels: [],
   prices : [],
-  name:"",
-  date:""
 }
 
 const CoinInfo = () => {
@@ -75,16 +74,47 @@ const CoinInfo = () => {
   
   useLocation();
   let coinID = document.location.pathname.split("/")[2]
+  useEffect(()=>{
+    axios.get(`https://api.coingecko.com/api/v3/coins/${coinID}`)
+    .then((response) => {
+      console.log(response);
+      setcurrentCoinInfo(response.data)
+      document.getElementById("description").innerHTML =  "Click HERE to read more" + "<br/>" + response.data.description.en
+      document.getElementById("Full_info_modal_div").innerHTML =  response.data.description.en
+    }, (error) => {
+      console.log(error);
+    });
+
+
+  // GET MARKET_CHART_1_DAY
+
+  chartRequest(1) 
+   
+
+  },[document.location.pathname])
+React.useEffect(()=>{
+  const interval = setInterval(()=>{
+    axios.get(`https://api.coingecko.com/api/v3/coins/${coinID}`)
+    .then((response) => {
+      document.getElementById("full_price").innerHTML =       fix(response.data.market_data.current_price.usd,) + "$"
+      document.getElementById("full_price_low").innerHTML =   fix(response.data.market_data.low_24h.usd) + "$"
+      document.getElementById("full_price_high").innerHTML =  fix(response.data.market_data.high_24h.usd) + "$"
+    }, (error) => {
+      console.log(error);
+    });
+  },10000)
+  return () => {
+   clearInterval(interval)
+  };
+})
 
 
 
-
-
-const getFiveLables = (arrOfLables)=>{
+const getFivelabels = (arrOflabels)=>{
   let arr = []
-  let lengthOfArr = arrOfLables.length
+  let lengthOfArr = arrOflabels.length
   let period = Math.trunc(lengthOfArr/6)
-  arr.push(arrOfLables[0],arrOfLables[period],arrOfLables[period * 2 ],arrOfLables[period * 3],arrOfLables[period * 4],arrOfLables[period * 5],arrOfLables[lengthOfArr - 1])
+  arr.push(arrOflabels[0],arrOflabels[period],arrOflabels[period * 2 ],arrOflabels[period * 3],arrOflabels[period * 4],arrOflabels[period * 5],arrOflabels[lengthOfArr - 1])
   return arr
 }
 
@@ -113,8 +143,8 @@ const drawChart = (days,type)=>{
     type: 'line',
 
     data: {
-      labels: chartInfo.minlables,
-      // labels: getFiveLables(chartInfo.minlables) ,
+      labels: chartInfo.labels,
+      
       datasets: [{ 
         data: chartInfo.prices,
         label: coinID +" " + "price",
@@ -128,7 +158,7 @@ const drawChart = (days,type)=>{
       
       scales: {
 
-        xAxisID: { 
+        x: { 
           
             ticks:{
             color:"blue",
@@ -141,17 +171,20 @@ const drawChart = (days,type)=>{
           },
         },
 
-        yAxisID: { 
+        y: { 
           type: type ==='logarithmic'?'logarithmic':"linear",
+
           ticks:{
             color:"blue",
           },
+
           grid:{
             // color:"transparent"
           }
         },
         
       },
+
       elements: {
         point: {
           radius:0.2,
@@ -215,47 +248,22 @@ const drawChart = (days,type)=>{
 
 
   const chartRequest = (days)=>{
-    chartInfo.lables = []
-    chartInfo.minlables = []
+    chartInfo.labels = []
     chartInfo.prices = []
 
     axios.get(`https://api.coingecko.com/api/v3/coins/${coinID}/market_chart?vs_currency=usd&days=${days}`)
     .then((response) => {
       response.data.prices.forEach((e)=>{
         let date = new Date(e[0])
-        chartInfo.lables.push( date.getDate() + "." + parseInt(date.getMonth()+1) + "." + date.getFullYear() + "   " + date.getHours() +":" + date.getMinutes() )
-        chartInfo.minlables.push(date.getDate() + "." + parseInt(date.getMonth()+1) + "." + date.getFullYear() + "   " + date.getHours() +":" + date.getMinutes() )
-        chartInfo.prices.push(fix(e[1],0.8))
+        chartInfo.labels.push( date.getDate() + "." + parseInt(date.getMonth()+1) + "." + date.getFullYear() + "   " + date.getHours() +":" + date.getMinutes() )
+        chartInfo.prices.push((e[1]))
       })
-      
       drawChart(days,"linear")
     }, (error) => {
       console.log(error);
     });
 
   }
-
-  
-
-  useEffect(()=>{
-
-    axios.get(`https://api.coingecko.com/api/v3/coins/${coinID}`)
-    .then((response) => {
-      console.log(response);
-      setcurrentCoinInfo(response.data)
-      document.getElementById("description").innerHTML =  response.data.description.en
-    }, (error) => {
-      console.log(error);
-    });
-
-
-  // GET MARKET_CHART_1_DAY
-
-  chartRequest(1) 
-   
-
-  },[document.location.pathname])
-
 
 
 const color = (number)=>{
@@ -269,30 +277,32 @@ const color = (number)=>{
 }
 
 
-
-
-
-
-
+const [alignment, setAlignment] = React.useState(1);
+const handleChange = (newAlignment) => {
+  if(newAlignment == null){
+    return
+  }
+  setAlignment(newAlignment);
+};
 
 
 
 
   return <div className="coinInfo">
-    <div className="info">
 
+    <div className="info">
       <div>
         <span className="full_rank"> Market Cap Rank #&nbsp;{currentCoinInfo?.market_cap_rank }</span>
         <span className="full_name"> <img src={currentCoinInfo?.image?.large}></img> &nbsp;{currentCoinInfo.name} ({currentCoinInfo.symbol?.toUpperCase()})</span>
-        <span className="full_price">{fix(currentCoinInfo.market_data?.current_price?.usd,2)}$</span>
+        <span id="full_price" className="full_price">{fix(currentCoinInfo.market_data?.current_price?.usd)}$</span>
 
 
         <span className="progress_container ">
           <progress className="progress " value={((currentCoinInfo.market_data?.current_price?.usd - currentCoinInfo.market_data?.low_24h.usd )/( currentCoinInfo.market_data?.high_24h.usd - currentCoinInfo.market_data?.low_24h.usd) * 100).toFixed(0) } max="100"></progress>
           <div className="min_max">
-            <span>{fix(currentCoinInfo.market_data?.low_24h.usd,2)}$</span>
+            <span id="full_price_low">{fix(currentCoinInfo.market_data?.low_24h.usd)}$</span>
             <span>24 hour</span>
-            <span>{fix(currentCoinInfo.market_data?.high_24h.usd,2)}$</span>
+            <span id="full_price_high">{fix(currentCoinInfo.market_data?.high_24h.usd)}$</span>
           </div>
         </span>
       </div>
@@ -304,13 +314,13 @@ const color = (number)=>{
 
         <div>
           <div className="sec_info_item">
-            <span className="">Market Cap:&nbsp;{ Intl.NumberFormat('ru-RU').format(currentCoinInfo.market_data?.market_cap.usd)}$</span>
-            <span className="">Market Cap change 24h:&nbsp;{color(currentCoinInfo.market_data?.market_cap_change_percentage_24h)}</span>
+            <span className="" >Market Cap:&nbsp;{ fix(currentCoinInfo.market_data?.market_cap.usd)}$</span>
+            <span className="" >Market Cap change 24h:&nbsp;{color(currentCoinInfo.market_data?.market_cap_change_percentage_24h)}</span>
           </div>
 
           <div className="sec_info_item">
-            <span className="">Circulating Supply:&nbsp;{Intl.NumberFormat('ru-RU').format(currentCoinInfo.market_data?.circulating_supply)}</span>
-            <span className="">Max Supply:&nbsp;{Intl.NumberFormat('ru-RU').format(currentCoinInfo.market_data?.max_supply)}</span>
+            <span className="">Circulating Supply:&nbsp;{fix(currentCoinInfo.market_data?.circulating_supply)}</span>
+            <span className="">Max Supply:&nbsp;{currentCoinInfo.market_data?.max_supply === null?"∞":fix(currentCoinInfo.market_data?.max_supply)}</span>
           </div>
         </div>
 
@@ -324,11 +334,11 @@ const color = (number)=>{
           </div>
 
           <div className="sec_info_item">
-            <span className="">24 Hour Trading Vol:&nbsp;{Intl.NumberFormat('ru-RU').format(currentCoinInfo.market_data?.total_volume.usd)}$</span>
-            <span className="">All time High Price:&nbsp;{Intl.NumberFormat('ru-RU').format(currentCoinInfo.market_data?.ath.usd)}$</span>
+            <span className="">24 Hour Trading Vol:&nbsp;{fix(currentCoinInfo.market_data?.total_volume.usd)}$</span>
+            <span className="">All time High Price:&nbsp;{fix(currentCoinInfo.market_data?.ath.usd)}$</span>
 
           </div>
-          <div className="sec_info_item description" >
+          <div className="sec_info_item description" onClick={()=>{document.getElementById("Full_info_modal").classList.remove("hidden")}}>
             <span id="description" className="description"></span>
           </div>
         </div>
@@ -337,15 +347,15 @@ const color = (number)=>{
 
     </div>
     <div id="market_chart_container" className="market_chart_container">
-    <ButtonGroup variant="contained" aria-label="outlined primary button group">
-      <Button onClick={()=>{chartRequest(1)}}>1 DAY</Button>
-      <Button onClick={()=>{chartRequest(7)}}>7 DAYS</Button>
-      <Button onClick={()=>{chartRequest(30)}}>30 DAYS</Button>
-      <Button onClick={()=>{chartRequest(180)}}>180 DAYS</Button>
-      <Button onClick={()=>{chartRequest(365)}}>1 YEAR</Button>
-      <Button onClick={()=>{chartRequest("max")}}>MAX</Button>
+    <ToggleButtonGroup color="primary" value={alignment} exclusive onChange={handleChange} variant="contained" aria-label="Platform">
+      <ToggleButton value={"1"} onClick={(e)=>{chartRequest(1)}}>1 DAY</ToggleButton>
+      <ToggleButton value={"7"}  onClick={(e)=>{chartRequest(7)}}>7 DAYS</ToggleButton>
+      <ToggleButton value={"30"} onClick={(e)=>{chartRequest(30)}}>30 DAYS</ToggleButton>
+      <ToggleButton value={"180"} onClick={(e)=>{chartRequest(180)}}>180 DAYS</ToggleButton>
+      <ToggleButton value={"365"} onClick={(e)=>{chartRequest(365)}}>1 YEAR</ToggleButton>
+      <ToggleButton value={"max"} onClick={(e)=>{chartRequest("max")}}>MAX</ToggleButton>
       
-    </ButtonGroup>
+    </ToggleButtonGroup>
     <button className="chart_button" onClick={()=>{changeChartToLog()}}>Log</button>
     <canvas id="chart"   ></canvas>
 

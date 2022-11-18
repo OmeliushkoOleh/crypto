@@ -5,9 +5,8 @@ import Button from '@mui/material/Button';
 import LogRegModal from "../LogRegModal/LogRegModal";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import  translations from "../../services/locale.ts"
-
-
+import locales from "./I18n";
+import { MyContext } from "../../App";
 const splitNumber = (number)=>{
   if(!number){
     return
@@ -52,16 +51,9 @@ const TopBar = () => {
   const navigate = useNavigate();
   const [global, setglobal] = React.useState([])
 
-  let jsonParsedLang = JSON.parse(localStorage.getItem("Language"))
 
+  const provider = React.useContext(MyContext)
 
-  React.useEffect(()=>{
-    if(jsonParsedLang === null || jsonParsedLang === "en" ) {
-      changeLang("en")
-    } else{
-      changeLang(jsonParsedLang)
-    }
-    },[jsonParsedLang])
   
   const changeTheme = ()=>{
     let set 
@@ -147,54 +139,60 @@ const loadChoosenCoinPage = (event)=>{
 let locale = "en";
 
 const showLanguagesSheet = ()=>{
-  console.log("showLanguagesSheet");
   document.getElementById("languagesSheet")?.classList.toggle("hidden")
-
-}
-const changeLang = (lang)=>{
-  locale = lang 
-  document.querySelectorAll("[data-i18n-key]").forEach(translateElement);
-  document.querySelectorAll("[data-i18-val]").forEach(translateElement);
-  let languageStringifyed = JSON.stringify(lang)
-  localStorage.setItem("Language", languageStringifyed)
-}
-function translateElement(element) {
-  const key  = element.getAttribute("data-i18n-key");
-  const translation = translations[locale][key] ;
-  element.innerText = translation;
-
-  const val = element.getAttribute("data-i18-val");
-  const translation1 = translations[locale][val];
-  element.value = translation1;
 }
 
+// const changeLang = (lang)=>{
+//   locale = lang 
+//   document.querySelectorAll("[data-i18n-key]").forEach(translateElement);
+//   document.querySelectorAll("[data-i18-val]").forEach(translateElement);
+//   let languageStringifyed = JSON.stringify(lang)
+//   localStorage.setItem("Language", languageStringifyed)
+// }
+// const translateElement = (element)=> {
+//   const key  = element.getAttribute("data-i18n-key");
+//   const translation = translations[locale][key] ;
+//   element.innerText = translation;
 
+//   const val = element.getAttribute("data-i18-val");
+//   const translation1 = translations[locale][val];
+//   element.value = translation1;
+// }
+
+
+
+// React.useEffect(()=>{
+//   document.getElementById("search_input").addEventListener('input', findByName);
+// },[])
+
+const t = provider.translate.bind(null,locales)
   return <div className="top_bar">
 
     <LogRegModal></LogRegModal>
 
     <div className="top_bar_item">
-      <Button variant="contained" >
-        <Link to="" data-i18n-key="home" className="home" ></Link>
+      <Button variant="contained"  >
+        <Link to=""  className="home" >{t("home")}</Link>
       </Button>
       <div className="global">
-      <span><span data-i18n-key="Coins_global"></span> <span >{new Intl.NumberFormat('ru').format(global?.data?.active_cryptocurrencies)}</span></span>
-      <span><span data-i18n-key="Exchanges_global"></span><span >{global?.data?.markets}</span></span>
-      <span><span data-i18n-key="Market_Cap_global"></span><span >{new Intl.NumberFormat('ru').format(global?.data?.total_market_cap?.usd.toFixed(0)) }</span></span>
-      <span><span data-i18n-key="24h_Vol_global"></span><span >{new Intl.NumberFormat('ru').format(global?.data?.total_volume?.usd?.toFixed(0))}</span></span>
+      <span><span  >{t("Coins_global")}</span> <span >{new Intl.NumberFormat('ru').format(global?.data?.active_cryptocurrencies)}</span></span>
+      <span><span  >{t("Exchanges_global")}</span><span >{global?.data?.markets}</span></span>
+      <span><span  >{t("Market_Cap_global")}</span><span >{new Intl.NumberFormat('ru').format(global?.data?.total_market_cap?.usd.toFixed(0)) }</span></span>
+      <span><span  >{t("24h_Vol_global")}</span><span >{new Intl.NumberFormat('ru').format(global?.data?.total_volume?.usd?.toFixed(0))}</span></span>
       </div>
     </div> 
 
     <div className="top_bar_item settings" >
       
-      
 
       <div className="settings">
       <div className="settings_language" onClick={showLanguagesSheet}>
-          <span className="top_item_language_name" data-i18n-key="language"></span>
+          <span className="top_item_language_name" >{t("language")}</span>
           <div id="languagesSheet" className="languages hidden">
-            <span className="languageSheetItem" onClick={()=>{changeLang("en")}} data-i18n-key="english"></span>
-            <span className="languageSheetItem" onClick={()=>{changeLang("ua")}} data-i18n-key="ukraine"></span>
+
+            <span className="languageSheetItem" onClick={()=>{provider.changeLanguage("en")}}>{t("english")}</span>
+            <span className="languageSheetItem" onClick={()=>{provider.changeLanguage("ua")}}>{t("ukraine")}</span>
+
           </div>  
       </div> 
 
@@ -208,11 +206,10 @@ function translateElement(element) {
     </div> 
 
     <div className="top_bar_item search">
-      <div style={{display:"flex"}}>
-      <input className="search_input" ref={search_input_ref}></input> 
-      <button className="search_button" style={{margin:"5px"}} onClick={()=>{findByName()}} data-i18n-key="Find"></button>
-      </div>
-     
+        <div style={{display:"flex"}}>
+        <input id="search_input" autoComplete="off" className="search_input" placeholder={t("Find")} ref={search_input_ref}></input> 
+        <button className="search_button" style={{margin:"5px"}} onClick={()=>{findByName()}} >{t("Find")}</button>
+        </div>
 
      <div style={{display: "flex",flexDirection: "column",alignItems: "center"}}>
       <div id="coinSheet" className="coinSheet">
@@ -225,7 +222,6 @@ function translateElement(element) {
     </div> 
 
     <div className="top_bar_item"> 
-
       <Button variant="contained" onClick={()=>{document.getElementById("log_reg_modal").classList.toggle("hidden")}} >Log/Reg</Button>
 
     </div> 
