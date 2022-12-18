@@ -113,6 +113,10 @@
     margin-top: 3px;
 }
 
+.market_chart_container button {
+    max-height: 35px;
+}
+
 .market_chart_container .chart_button:hover {
     transform: scale(1.05);
 }
@@ -125,5 +129,15 @@
     background-color: red !important;
 }
 
+.MuiButtonBase-root .css-d9c359-MuiButtonBase-root-MuiToggleButton-root {
+    color: red;
+}
+
 
 /* class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedContained MuiButtonGroup-groupedContainedHorizontal MuiButtonGroup-groupedContainedPrimary MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButtonGroup-grouped MuiButtonGroup-groupedHorizontal MuiButtonGroup-groupedContained MuiButtonGroup-groupedContainedHorizontal MuiButtonGroup-groupedContainedPrimary css-sghohy-MuiButtonBase-root-MuiButton-root" */
+
+
+/* MuiButtonBase-root MuiToggleButton-root MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal css-d9c359-MuiButtonBase-root-MuiToggleButton-root */
+
+
+/* MuiButtonBase-root MuiToggleButton-root Mui-selected MuiToggleButton-sizeMedium MuiToggleButton-primary MuiToggleButtonGroup-grouped MuiToggleButtonGroup-groupedHorizontal css-d9c359-MuiButtonBase-root-MuiToggleButton-root */

@@ -17,7 +17,10 @@
     "git": "^0.1.5",
     "i18next": "^22.0.6",
     "i18next-xhr-backend": "^3.2.2",
+    "jquery": "^3.6.2",
+    "lodash.throttle": "^4.1.1",
     "react": "^18.2.0",
+    "react-date-range": "^1.4.0",
     "react-dom": "^18.2.0",
     "react-i18next": "^12.0.0",
     "react-router-dom": "^6.4.3",
@@ -48,5 +51,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "vanillajs-datepicker": "^1.2.0"
   }
 }

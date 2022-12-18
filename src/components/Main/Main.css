@@ -155,3 +155,24 @@ body.dark .navigation:hover {
     visibility: visible;
     opacity: 1;
 }
+
+.favorite {
+    cursor: pointer;
+    font-size: 1.3em;
+}
+
+.favorite:hover {
+    color: #00ff00;
+}
+
+.in_favotite {
+    color: yellow;
+}
+
+.price_change_td {
+    min-width: 180px;
+}
+
+.tir_td {
+    min-width: 55px;
+}

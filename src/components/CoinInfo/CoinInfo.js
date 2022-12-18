@@ -3,11 +3,10 @@
 import React, { useEffect, useState } from "react";
 import './CoinInfo.css';
 import axios from "axios";
-import Button from '@mui/material/Button';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import { useLocation } from 'react-router-dom';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+
 
 
 const fix = (num)=>{
@@ -74,6 +73,7 @@ const CoinInfo = () => {
   
   useLocation();
   let coinID = document.location.pathname.split("/")[2]
+  
   useEffect(()=>{
     axios.get(`https://api.coingecko.com/api/v3/coins/${coinID}`)
     .then((response) => {
@@ -92,6 +92,7 @@ const CoinInfo = () => {
    
 
   },[document.location.pathname])
+
 React.useEffect(()=>{
   const interval = setInterval(()=>{
     axios.get(`https://api.coingecko.com/api/v3/coins/${coinID}`)
@@ -250,7 +251,7 @@ const drawChart = (days,type)=>{
   const chartRequest = (days)=>{
     chartInfo.labels = []
     chartInfo.prices = []
-
+    setAlignment("1 DAY")
     axios.get(`https://api.coingecko.com/api/v3/coins/${coinID}/market_chart?vs_currency=usd&days=${days}`)
     .then((response) => {
       response.data.prices.forEach((e)=>{
@@ -277,14 +278,14 @@ const color = (number)=>{
 }
 
 
-const [alignment, setAlignment] = React.useState(1);
+const [alignment, setAlignment] = React.useState("1 DAY");
+
 const handleChange = (newAlignment) => {
   if(newAlignment == null){
     return
   }
-  setAlignment(newAlignment);
+  setAlignment(newAlignment.target.innerText);
 };
-
 
 
 
@@ -299,11 +300,13 @@ const handleChange = (newAlignment) => {
 
         <span className="progress_container ">
           <progress className="progress " value={((currentCoinInfo.market_data?.current_price?.usd - currentCoinInfo.market_data?.low_24h.usd )/( currentCoinInfo.market_data?.high_24h.usd - currentCoinInfo.market_data?.low_24h.usd) * 100).toFixed(0) } max="100"></progress>
+
           <div className="min_max">
             <span id="full_price_low">{fix(currentCoinInfo.market_data?.low_24h.usd)}$</span>
             <span>24 hour</span>
             <span id="full_price_high">{fix(currentCoinInfo.market_data?.high_24h.usd)}$</span>
           </div>
+          
         </span>
       </div>
       
@@ -347,15 +350,21 @@ const handleChange = (newAlignment) => {
 
     </div>
     <div id="market_chart_container" className="market_chart_container">
-    <ToggleButtonGroup color="primary" value={alignment} exclusive onChange={handleChange} variant="contained" aria-label="Platform">
-      <ToggleButton value={"1"} onClick={(e)=>{chartRequest(1)}}>1 DAY</ToggleButton>
-      <ToggleButton value={"7"}  onClick={(e)=>{chartRequest(7)}}>7 DAYS</ToggleButton>
-      <ToggleButton value={"30"} onClick={(e)=>{chartRequest(30)}}>30 DAYS</ToggleButton>
-      <ToggleButton value={"180"} onClick={(e)=>{chartRequest(180)}}>180 DAYS</ToggleButton>
-      <ToggleButton value={"365"} onClick={(e)=>{chartRequest(365)}}>1 YEAR</ToggleButton>
-      <ToggleButton value={"max"} onClick={(e)=>{chartRequest("max")}}>MAX</ToggleButton>
-      
+    <ToggleButtonGroup color="primary"
+          value={alignment}
+          exclusive
+          onChange={(e)=>{handleChange(e)}}
+          aria-label="Platform"
+        >
+      <ToggleButton value={"1 DAY"} onClick={(e)=>{chartRequest(1)}}>1 DAY</ToggleButton>
+      <ToggleButton value={"7 DAYS"}  onClick={(e)=>{chartRequest(7)}}>7 DAYS</ToggleButton>
+      <ToggleButton value={"30 DAYS"} onClick={(e)=>{chartRequest(30)}}>30 DAYS</ToggleButton>
+      <ToggleButton value={"180 DAYS"} onClick={(e)=>{chartRequest(180)}}>180 DAYS</ToggleButton>
+      <ToggleButton value={"1 YEAR"} onClick={(e)=>{chartRequest(365)}}>1 YEAR</ToggleButton>
+      <ToggleButton value={"MAX"} onClick={(e)=>{chartRequest("max")}}>MAX</ToggleButton>
     </ToggleButtonGroup>
+    
+
     <button className="chart_button" onClick={()=>{changeChartToLog()}}>Log</button>
     <canvas id="chart"   ></canvas>
 

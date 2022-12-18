@@ -51,27 +51,13 @@ const TopBar = () => {
   const navigate = useNavigate();
   const [global, setglobal] = React.useState([])
 
-
+  const search_input_ref = React.useRef("")
+  const [listOfFindedCoins, setlistOfFindedCoins] = React.useState([])
   const provider = React.useContext(MyContext)
 
-  
-  const changeTheme = ()=>{
-    let set 
-    let remove
-    let add 
-  if(localStorage.getItem("theme") === "light"){
-     set = "dark"
-     remove = "light"
-     add = "dark"
-  } else{
-     set = "light"
-     remove = "dark"
-     add = "light"
-  }
-  localStorage.setItem("theme",set)
-  document.body.classList.remove(remove)
-  document.body.classList.add(add)
-}
+  React.useEffect(()=>{
+    document.body.addEventListener('click', ()=>{setlistOfFindedCoins([])})
+  },[])
 
   React.useEffect(()=>{
 
@@ -91,17 +77,34 @@ const TopBar = () => {
 
   },[])
 
+  const changeTheme = ()=>{
+    let set 
+    let remove
+    let add 
+  if(localStorage.getItem("theme") === "light"){
+     set = "dark"
+     remove = "light"
+     add = "dark"
+  } else{
+     set = "light"
+     remove = "dark"
+     add = "light"
+  }
+  localStorage.setItem("theme",set)
+  document.body.classList.remove(remove)
+  document.body.classList.add(add)
+}
+
+
+
   const findById = (id)=>{
     localStorage.setItem("currentCoin",id)
     navigate(`/coins/${id}`);
   }
 
-  const search_input_ref = React.useRef("")
-  const [listOfFindedCoins, setlistOfFindedCoins] = React.useState([])
 
-  React.useEffect(()=>{
-    document.body.addEventListener('click', ()=>{setlistOfFindedCoins([])})
-  },[])
+
+
 
 const findByName = ()=>{
   if(search_input_ref.current.value === ""){
@@ -165,6 +168,12 @@ const showLanguagesSheet = ()=>{
 //   document.getElementById("search_input").addEventListener('input', findByName);
 // },[])
 
+const logOut = ()=>{
+  localStorage.setItem("currentUser",null)
+  localStorage.setItem("favorites",null)
+  navigate(`/`);
+}
+
 const t = provider.translate.bind(null,locales)
   return <div className="top_bar">
 
@@ -176,9 +185,9 @@ const t = provider.translate.bind(null,locales)
       </Button>
       <div className="global">
       <span><span  >{t("Coins_global")}</span> <span >{new Intl.NumberFormat('ru').format(global?.data?.active_cryptocurrencies)}</span></span>
-      <span><span  >{t("Exchanges_global")}</span><span >{global?.data?.markets}</span></span>
-      <span><span  >{t("Market_Cap_global")}</span><span >{new Intl.NumberFormat('ru').format(global?.data?.total_market_cap?.usd.toFixed(0)) }</span></span>
-      <span><span  >{t("24h_Vol_global")}</span><span >{new Intl.NumberFormat('ru').format(global?.data?.total_volume?.usd?.toFixed(0))}</span></span>
+      <span><span  >{t("Exchanges_global")}</span> <span >{global?.data?.markets}</span></span>
+      <span><span  >{t("Market_Cap_global")}</span> <span >{new Intl.NumberFormat('ru').format(global?.data?.total_market_cap?.usd.toFixed(0)) }</span></span>
+      <span><span  >{t("24h_Vol_global")}</span> <span >{new Intl.NumberFormat('ru').format(global?.data?.total_volume?.usd?.toFixed(0))}</span></span>
       </div>
     </div> 
 
@@ -222,7 +231,8 @@ const t = provider.translate.bind(null,locales)
     </div> 
 
     <div className="top_bar_item"> 
-      <Button variant="contained" onClick={()=>{document.getElementById("log_reg_modal").classList.toggle("hidden")}} >Log/Reg</Button>
+      <Button variant="contained" onClick={()=>{document.getElementById("log_reg_modal").classList.toggle("hidden")}} >{t("logIn")}</Button>
+      <Button variant="contained" onClick={()=>{logOut()}}>{t("logOut")}</Button>
 
     </div> 
 

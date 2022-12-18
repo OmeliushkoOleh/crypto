@@ -9,6 +9,8 @@ export default   {
         "Market_Cap_global":"Market Cap",
         "24h_Vol_global":"24h Volume",
         "Find":"Find",
+        "logIn":"login",
+        "logOut":"log out",
     },
     "ua":{
         "home":"Головна",
@@ -20,5 +22,8 @@ export default   {
         "Market_Cap_global":"Капіталізація",
         "24h_Vol_global":"об'єм за 24год",
         "Find":"Знайти",
+        "logIn":"Увійти",
+        "logOut":"Вийти",
+
     }
 }

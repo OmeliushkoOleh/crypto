@@ -4,8 +4,10 @@ import {MyContext} from "../../App"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Pagination from '@mui/material/Pagination';
-
+import  $ from "jquery"
 import locales from "./I18n";
+
+
 
 export   function numberWithCommas(x) {
   var parts = x.toString().split(".");
@@ -23,16 +25,18 @@ export   const fix = (num)=>{
     return arr.reverse().join("")
   }
 }
-
+let arrOfAllCrypt
 const Main = () => {
 
   const provider = React.useContext(MyContext)
   
   const navigate = useNavigate();
 
-  const [arrOfCrypt, setarrOfCrypt] = useState([])
+  const [favoritesArr, setFavoritesArr] = useState([])
+  const [arrOfCrypt, setArrOfCrypt] = useState([])
   const [sorted, setsorted] = useState(false)
   const [page, setPage] = React.useState(1);
+  const [isFavoritesShowed, setIsFavoritesShowed] = React.useState(false);
 
   let context = React.useContext(MyContext)
 
@@ -48,8 +52,14 @@ const Main = () => {
 
 
   React.useEffect(()=>{
+    setArrOfCrypt(arrOfCrypt)
+    
+  },[localStorage.getItem("currentUser")])
+
+  React.useEffect(()=>{
     let page = localStorage.getItem("currentPage")
     setPage(parseInt(page))
+
     // axios.get('https://api.coingecko.com/api/v3/coins/list?include_platform=false')
     // .then((response) => {
     //   console.log(response.data.length);
@@ -72,12 +82,16 @@ const Main = () => {
         e.img = new Image(25, 25)
         e.img.src = e.image
       })
-      setarrOfCrypt(response.data)
+      setArrOfCrypt(response.data)
+      arrOfAllCrypt = response.data
     }, (error) => {
       console.log(error);
     });
-    
-    
+    if(localStorage.getItem("favorites")){
+      setFavoritesArr(localStorage.getItem("favorites").split(","))
+    } else{
+      setFavoritesArr([])
+    }
 },[])
 
 
@@ -92,7 +106,7 @@ const Main = () => {
       return 0;
     })
     setsorted(!sorted)
-    setarrOfCrypt([...newArr])
+    setArrOfCrypt([...newArr])
   }
 
   const findById = (id)=>{
@@ -116,13 +130,66 @@ const Main = () => {
         e.img = new Image(25, 25)
         e.img.src = e.image
       })
-      setarrOfCrypt(response.data)
+      setArrOfCrypt(response.data)
     }, (error) => {
       console.log(error);
     });
   }
 
   const t = provider.translate.bind(null,locales)
+
+   const favorites = (e)=>{
+    if(localStorage.getItem("currentUser") === "null"){
+      return
+    }
+    let arr = favoritesArr
+    if(favoritesArr.includes(e.target.id)){
+      arr = arr.filter(e1=>e1 !== e.target.id)
+      setFavoritesArr(arr)
+      e.target.classList.toggle("in_favotite")
+      localStorage.setItem("favorites",arr)
+    } else{
+      arr.push(e.target.id)
+      setFavoritesArr(arr)
+      e.target.classList.toggle("in_favotite")
+      localStorage.setItem("favorites",arr)
+    }
+    let data = {}
+    data.favorites = arr
+    data.email = localStorage.getItem("currentUser")
+    $.ajax({
+      type: "post",
+      data: data,
+      url: "http://localhost:4000/favorites_change",
+      success: (res)=>{
+      },
+      error: function(res) {
+        alert(res.responseText)
+      }
+    })
+   }
+   
+   const showHideOnlyFavorites = (e)=>{
+
+    e.target.classList.toggle("in_favotite")
+    if(isFavoritesShowed === false){
+      let favorites = localStorage.getItem("favorites");
+      let arr = [];
+      arrOfCrypt.forEach((e)=>{
+        if(favorites.includes(e.id)){
+          arr.push(e)
+        }
+      })
+      setArrOfCrypt(arr)
+      console.log(arr);
+      setIsFavoritesShowed(true)
+    } else{
+      setArrOfCrypt(arrOfAllCrypt)
+      console.log(arrOfAllCrypt);
+      setIsFavoritesShowed(false)
+    }
+
+   }  
 
   return <div className="main">
       <div className="navigation top" onClick={()=>{window.scrollTo(0,0)}}>&#129153;</div>
@@ -132,13 +199,13 @@ const Main = () => {
 
         <thead>
           <tr>
-            <td  onClick={()=>{sortBy(arrOfCrypt,"market_cap_rank")}}><span className="header_td">#
-            <span className="tooltiptext">Tooltip text</span></span></td>
-            <td  onClick={()=>{sortBy(arrOfCrypt,"name")}} className="name" > {t("name")}<span className="header_td"></span></td>
-            <td  onClick={()=>{sortBy(arrOfCrypt,"current_price")}}>{t("Price")}<span className="header_td"></span></td>
-            <td  onClick={()=>{sortBy(arrOfCrypt,"market_cap")}}>{t("MarketCap")}<span className="header_td"></span></td>
-            <td  onClick={()=>{sortBy(arrOfCrypt,"total_volume")}}>{t("Volume")}<span className="header_td"></span></td>
-            <td  onClick={()=>{sortBy(arrOfCrypt,"price_change_percentage_24h")}}>{t("price_change")}<span className="header_td"></span></td>
+            <td  onClick={(e)=>{showHideOnlyFavorites(e)}}><span className="favorite">&#9733;</span></td>
+            <td  className="tir_td" onClick={()=>{sortBy(arrOfCrypt,"market_cap_rank")}}>#</td>
+            <td  onClick={()=>{sortBy(arrOfCrypt,"name")}} className="name" > {t("name")}</td>
+            <td  onClick={()=>{sortBy(arrOfCrypt,"current_price")}}>{t("Price")}</td>
+            <td  onClick={()=>{sortBy(arrOfCrypt,"market_cap")}}>{t("MarketCap")}</td>
+            <td  onClick={()=>{sortBy(arrOfCrypt,"total_volume")}}>{t("Volume")}</td>
+            <td  className="price_change_td" onClick={()=>{sortBy(arrOfCrypt,"price_change_percentage_24h")}}>{t("price_change")}</td>
           </tr>
         </thead>
         
@@ -148,6 +215,10 @@ const Main = () => {
             let key = Math.random()*100 + Math.random()*100
             return (
             <tr  key={key}>
+              <td ><span className="favorite" onClick={(e)=>{favorites(e)}} >{favoritesArr.length !==0 && favoritesArr.includes(e.id)?
+                <span id={e.id} className="in_favotite">&#9733;</span>:
+                <span id={e.id} >&#9734;</span>}
+              </span></td>
               <td>{e.market_cap_rank} </td>
               <td className="name" onClick={()=>{findById(e.id)}} > <img style={{width:"25px",height:"25px"}} src={e.image}></img> &nbsp; {e.name} <span style={{color:"grey",fontWeight:"500"}}>({e.symbol.toUpperCase()})</span></td>
               <td >{fix(e.current_price)}$</td>
